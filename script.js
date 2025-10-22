@@ -1060,10 +1060,56 @@ function initDarkMode() {
   });
 }
 
+// Scroll to top functionality
+function initScrollToTop() {
+  const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+  
+  // Show/hide button based on scroll position
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      scrollToTopBtn.style.display = 'block';
+    } else {
+      scrollToTopBtn.style.display = 'none';
+    }
+  });
+  
+  // Scroll to top when button is clicked
+  scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    
+    // For faster animation (100ms), we can use a custom animation
+    const startTime = performance.now();
+    const startPosition = window.pageYOffset;
+    const duration = 100; // 100ms as requested
+    
+    function animateScroll(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function for smooth animation
+      const easeInOutQuad = progress < 0.5 
+        ? 2 * progress * progress 
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+      
+      window.scrollTo(0, startPosition * (1 - easeInOutQuad));
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    }
+    
+    requestAnimationFrame(animateScroll);
+  });
+}
+
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
   initializeDisclaimerModal();
   initDarkMode();
+  initScrollToTop();
 });
 
 loadCareers();

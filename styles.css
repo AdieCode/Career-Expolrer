@@ -1964,3 +1964,58 @@ body.dark-mode button:hover {
     font-size: 0.85rem;
   }
 }
+
+/* Scroll to Top Button Styles */
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-to-top:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+}
+
+.scroll-to-top:active {
+  transform: translateY(0);
+}
+
+/* Dark mode support for scroll to top button */
+body.dark-mode .scroll-to-top {
+  background: #f39c12;
+  color: #1a1a1a;
+  box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+}
+
+body.dark-mode .scroll-to-top:hover {
+  background: #e67e22;
+  box-shadow: 0 6px 16px rgba(243, 156, 18, 0.4);
+}
+
+/* Mobile adjustments for scroll to top button */
+@media (max-width: 768px) {
+  .scroll-to-top {
+    bottom: 15px;
+    left: 15px;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+}
