@@ -1191,12 +1191,13 @@ body.dark-mode button:hover {
     flex-direction: column;
     gap: 15px;
     margin-bottom: 20px;
+    margin-top: 40px;
   }
   
   /* Mobile: Reset order to natural flow (toggle first, then h1) */
   .dark-mode-toggle {
-    order: 0;
-    align-self: flex-end;
+    position: relative;
+    margin-bottom: 15px;
   }
   
   h1 {
