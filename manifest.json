@@ -1,0 +1,34 @@
+{
+  "name": "Career Explorer - Discover Your Perfect Career Path",
+  "short_name": "Career Explorer",
+  "description": "Comprehensive career exploration tool with information on 1400+ careers across multiple industries",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#3498db",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "career", "business"],
+  "lang": "en",
+  "scope": "/",
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "sizes": "1280x720",
+      "type": "image/png"
+    }
+  ]
+}

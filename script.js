@@ -77,6 +77,96 @@ let searchQuery = ''; // Current search query
 // Exchange rate for salary conversions
 const USD_TO_ZAR_RATE = 18.5; // Approximate exchange rate (updates as needed)
 
+// SEO Functions for dynamic meta updates
+function updatePageSEO(title, description, keywords = '') {
+  // Update page title
+  document.title = title;
+  
+  // Update meta description
+  let metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) {
+    metaDesc.setAttribute('content', description);
+  }
+  
+  // Update meta keywords if provided
+  if (keywords) {
+    let metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', keywords);
+    }
+  }
+  
+  // Update Open Graph title and description
+  let ogTitle = document.querySelector('meta[property="og:title"]');
+  let ogDesc = document.querySelector('meta[property="og:description"]');
+  
+  if (ogTitle) ogTitle.setAttribute('content', title);
+  if (ogDesc) ogDesc.setAttribute('content', description);
+  
+  // Update Twitter Card
+  let twitterTitle = document.querySelector('meta[name="twitter:title"]');
+  let twitterDesc = document.querySelector('meta[name="twitter:description"]');
+  
+  if (twitterTitle) twitterTitle.setAttribute('content', title);
+  if (twitterDesc) twitterDesc.setAttribute('content', description);
+}
+
+function generateCareerStructuredData(careerData, category) {
+  if (!careerData || typeof careerData === 'string') return null;
+  
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    "title": careerData.name,
+    "description": careerData.briefDescription || `Career information for ${careerData.name}`,
+    "industry": category,
+    "occupationalCategory": category,
+    "qualifications": careerData.skills ? careerData.skills.join(', ') : '',
+    "educationRequirements": careerData.educationPathways ? 
+      (Array.isArray(careerData.educationPathways) ? 
+        careerData.educationPathways.map(p => p.route).join(', ') : 
+        Object.keys(careerData.educationPathways).join(', ')) : '',
+    "workHours": careerData.typicalWorkingHours || 'Standard business hours',
+    "hiringOrganization": {
+      "@type": "Organization",
+      "name": "Various Employers"
+    }
+  };
+  
+  // Add salary information if available
+  if (careerData.salaryRange) {
+    const salaryData = typeof careerData.salaryRange === 'object' ? 
+      careerData.salaryRange.international || careerData.salaryRange.southAfrica : 
+      careerData.salaryRange;
+    
+    structuredData.baseSalary = {
+      "@type": "MonetaryAmount",
+      "currency": "USD",
+      "value": {
+        "@type": "QuantitativeValue",
+        "value": salaryData
+      }
+    };
+  }
+  
+  return structuredData;
+}
+
+function addStructuredDataToPage(data) {
+  // Remove existing structured data for career
+  const existingScript = document.querySelector('script[data-career-structured-data]');
+  if (existingScript) {
+    existingScript.remove();
+  }
+  
+  // Add new structured data
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.setAttribute('data-career-structured-data', 'true');
+  script.textContent = JSON.stringify(data);
+  document.head.appendChild(script);
+}
+
 async function loadCareers() {
   const res = await fetch('./careersData.json');
   const data = await res.json();
@@ -110,6 +200,14 @@ async function loadCareers() {
 function showCategoriesView() {
   currentView = 'categories';
   currentCategory = null;
+  
+  // Update SEO for categories page
+  const totalCareers = Object.values(currentData).reduce((sum, category) => sum + category.length, 0);
+  updatePageSEO(
+    'Career Explorer - Discover 1400+ Career Paths with Education Routes & Salary Info',
+    `Explore ${totalCareers}+ careers across Technology, Healthcare, Finance, Engineering, Education, Arts, Science and Creative fields. Find education pathways, salary ranges, and career requirements.`,
+    'career explorer, career guidance, job search, education pathways, salary information, technology careers, healthcare careers, engineering careers'
+  );
   
   const container = document.getElementById('categoryList');
   const detailsSection = document.getElementById('careerDetails');
@@ -620,6 +718,14 @@ function showCareersView(category) {
   currentView = 'careers';
   currentCategory = category;
   
+  // Update SEO for category page
+  const careerCount = currentData[category] ? currentData[category].length : 0;
+  updatePageSEO(
+    `${category} Careers - ${careerCount} Jobs | Career Explorer`,
+    `Discover ${careerCount} ${category.toLowerCase()} careers with detailed salary information, education pathways, and skill requirements. Find your perfect ${category.toLowerCase()} job today.`,
+    `${category.toLowerCase()} careers, ${category.toLowerCase()} jobs, ${category.toLowerCase()} salary, career guidance, education pathways`
+  );
+  
   const container = document.getElementById('categoryList');
   const detailsSection = document.getElementById('careerDetails');
   
@@ -837,6 +943,29 @@ function showCareerDetails(career, category) {
       if (foundCareer && typeof foundCareer !== 'string') {
         careerData = foundCareer;
       }
+    }
+  } else {
+    // Career is already a full object
+    careerName = career.name;
+    careerData = career;
+  }
+  
+  // Update SEO for career details page
+  const description = careerData && careerData.briefDescription ? 
+    careerData.briefDescription : 
+    `Explore career details for ${careerName} including education pathways, salary information, skills required, and job outlook.`;
+  
+  updatePageSEO(
+    `${careerName} Career Guide - Salary, Education & Skills | Career Explorer`,
+    description,
+    `${careerName.toLowerCase()}, ${careerName.toLowerCase()} career, ${careerName.toLowerCase()} salary, ${careerName.toLowerCase()} education, ${category.toLowerCase()} careers`
+  );
+  
+  // Add structured data for this career
+  if (careerData) {
+    const structuredData = generateCareerStructuredData(careerData, category);
+    if (structuredData) {
+      addStructuredDataToPage(structuredData);
     }
   } else {
     // Career is already a full object

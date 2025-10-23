@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://career-explorer-uof8.onrender.com/sitemap.xml
+
+# Optimize crawl budget
+Crawl-delay: 1
+
+# Block any admin or sensitive areas (if any)
+# Disallow: /admin/
+# Disallow: /private/
+
+# Allow all career-related content
+Allow: /careers/
+Allow: /categories/
+Allow: /search/

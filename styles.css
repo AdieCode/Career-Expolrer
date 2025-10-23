@@ -10,6 +10,24 @@ body {
   overflow-x: hidden;
 }
 
+/* Skip link for accessibility and SEO */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 10001;
+  transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -2013,7 +2031,7 @@ body.dark-mode .scroll-to-top:hover {
 @media (max-width: 768px) {
   .scroll-to-top {
     bottom: 15px;
-    left: 15px;
+    right: 15px;
     width: 45px;
     height: 45px;
     font-size: 18px;
